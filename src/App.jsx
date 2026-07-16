@@ -4,12 +4,17 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 import Leaves from './components/Leaves'
+import AutumnDuskBackground from './components/AutumnDuskBackground'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
+      <section id="leaves">
+        <AutumnDuskBackground />
+      </section>
+
       <section id="leaves">
         <Leaves />
       </section>
