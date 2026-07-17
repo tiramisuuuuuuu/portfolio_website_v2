@@ -8,9 +8,11 @@ function Leaf({
         return ({
             icon: Math.random() < 0.5 ? '🍂' : '🍁',
             startX: Math.floor(Math.random() * 600) - 200,
-            endX: -500,
+            endX: Math.floor(Math.random() * -window.innerWidth * 0.6) - 500,
+            endY: window.innerHeight + 10,
             startRotate: Math.floor(Math.random() * 360),
             endRotate: Math.floor(Math.random() * 540),
+            duration: Math.floor(Math.random() * 20) + 30,
         });
     }, []);
     
@@ -21,15 +23,20 @@ function Leaf({
                 right: 0,
             }}
             initial={{
-                y: -50,
+                y: -10,
                 x: leafAttr.startX,
                 rotate: leafAttr.startRotate,
             }}
             animate={{
-                y: window.innerHeight + 100,
+                y: leafAttr.endY,
                 x: leafAttr.endX,
                 rotate: leafAttr.endRotate,
-                transition: { duration: 20, ease: "linear", }
+                opacity: [1, 1, 0.5, 0],
+                transition: {
+                    duration: leafAttr.duration,
+                    ease: 'linear',
+                    times: [0, 0.9, 0.97, 1],
+                }
             }}
             onAnimationComplete={deleteLeaf}
         >{leafAttr.icon}</motion.p>
@@ -44,13 +51,13 @@ export default function Leaves() {
         const startTimer = () => {
             if (!document.hidden) {
                 setLeafKeys(prev => {
-                    if (prev.length >= 8) {
+                    if (prev.length == 15) {
                         return prev;
                     }
                     return [...prev, crypto.randomUUID()]
                 })
             }
-            const delay = Math.floor(Math.random() * 3001) + 1000;
+            const delay = Math.floor(Math.random() * 3001) + 3000;
             timerId = setTimeout(startTimer, delay)
         }
         startTimer()
