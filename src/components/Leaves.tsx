@@ -69,7 +69,7 @@ export default function Leaves() {
     }
 
     return (
-        <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', width: '100%', height: '100%', overflow: 'hidden' }}>
             {leafKeys.map((stableLeafKey) => 
                 <Leaf
                     key={stableLeafKey}
