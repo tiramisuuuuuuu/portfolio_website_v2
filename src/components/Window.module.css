@@ -1,0 +1,70 @@
+.navBar {
+    box-sizing: border-box;
+    width: 70%;
+    padding: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: #2c2049;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    cursor: grab;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dragging {
+    cursor: grabbing;
+}
+
+.header {
+    color: #a89bc9;
+    font-size: medium;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.bttns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+.bttn {
+    height: 22px;
+    width: 22px;
+    border: none;
+    padding: 0;
+    background-color: transparent;
+}
+
+.windowButton {
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #a89bc9;
+    cursor: pointer;
+    border-style: solid;
+    box-sizing: border-box;
+    text-align: center;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #a89bc9;
+}
+
+.windowButton:hover {
+  background-color: rgba(0, 0, 0, 0.134);
+}
+
+.contentBox {
+    background-color: #241a3d;
+    width: 70%;
+    aspect-ratio: 4 / 2;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
