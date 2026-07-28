@@ -3,6 +3,21 @@
   height: 70%;
   display: flex;
   flex-direction: column;
+  transition:
+    width 0.3s ease,
+    height 0.3s ease;
+}
+
+.smallWindow {
+  width: 30%;
+  height: 50%;
+}
+
+@media (max-width: 1024px) {
+  .smallWindow {
+    width: 250px;
+    height: 40%;
+  }
 }
 
 .navBar {
@@ -52,9 +67,9 @@
 .windowButton {
   height: 100%;
   width: 100%;
-  border-radius: 5px;
+  border-radius: 8px;
   border-width: 1px;
-  border-color: #a89bc9;
+  border-color: rgba(0, 0, 0, 0.134);
   cursor: pointer;
   border-style: solid;
   box-sizing: border-box;
@@ -67,7 +82,7 @@
 }
 
 .windowButton:hover {
-  background-color: rgba(0, 0, 0, 0.134);
+  background-color: rgba(0, 0, 0, 0.024);
 }
 
 .contentBox {

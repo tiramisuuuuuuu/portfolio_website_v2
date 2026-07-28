@@ -1,17 +1,27 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 
 import styles from './Window.module.css';
-import { IoBrowsersOutline, IoTerminal } from 'react-icons/io5';
+import { IoBrowsersOutline } from 'react-icons/io5';
 import { MdOutlineClose } from 'react-icons/md';
+import { FaTerminal } from 'react-icons/fa';
 
-export default function Window() {
+export default function Window({
+  minimized,
+  minimize,
+  close,
+}: {
+  minimized: boolean;
+  minimize: () => void;
+  close: () => void;
+}) {
   const nodeRef = useRef<HTMLDivElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isSmall, setIsSmall] = useState(false);
 
   const handleDrag = (e: any, data: { x: number; y: number }) => {
     setPosition({ x: data.x, y: data.y });
@@ -37,6 +47,18 @@ export default function Window() {
     return () => window.removeEventListener('resize', clampPosition);
   }, []);
 
+  useLayoutEffect(() => {
+    if (!parentRef.current || !nodeRef.current) return;
+
+    const parent = parentRef.current;
+    const child = nodeRef.current;
+
+    const x = (parent.clientWidth - child.offsetWidth) / 2;
+    const y = (parent.clientHeight - child.offsetHeight) / 2;
+
+    setPosition({ x, y });
+  }, []);
+
   return (
     <div
       ref={parentRef}
@@ -44,9 +66,8 @@ export default function Window() {
         position: 'absolute',
         width: '100%',
         height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        pointerEvents: 'none',
+        display: minimized ? 'none' : 'block',
       }}
     >
       <Draggable
@@ -59,7 +80,15 @@ export default function Window() {
         handle=".drag-handle"
         bounds="parent"
       >
-        <div ref={nodeRef} className={styles.entireWindow}>
+        <div
+          ref={nodeRef}
+          className={`${styles.entireWindow} ${isSmall && styles.smallWindow}`}
+          style={{
+            pointerEvents: 'auto',
+          }}
+          tabIndex={0}
+          onFocusCapture={() => console.log('Window focused')}
+        >
           <div
             className={`${styles.navBar} ${isDragging && styles.dragging} drag-handle`}
           >
@@ -72,7 +101,7 @@ export default function Window() {
                 gap: 10,
               }}
             >
-              <IoTerminal color="#a89bc9" size={25} />
+              <FaTerminal color="#a89bc9" size={25} />
               <p className={styles.heading}>Portfolio</p>
             </div>
 
@@ -80,6 +109,7 @@ export default function Window() {
               <button
                 onClick={() => {
                   console.log('Minimize CLICKED');
+                  minimize();
                 }}
                 className={styles.bttn}
               >
@@ -88,6 +118,7 @@ export default function Window() {
               <button
                 onClick={() => {
                   console.log('Resize CLICKED');
+                  setIsSmall((prev) => !prev);
                 }}
                 className={styles.bttn}
               >
@@ -98,6 +129,7 @@ export default function Window() {
               <button
                 onClick={() => {
                   console.log('Close CLICKED');
+                  close();
                 }}
                 className={styles.bttn}
               >
