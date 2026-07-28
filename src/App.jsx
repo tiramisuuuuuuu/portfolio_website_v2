@@ -1,7 +1,7 @@
-import './App.css'
-import Leaves from './components/Leaves'
-import AutumnDuskBackground from './components/AutumnDuskBackground'
-import Window from './components/Window'
+import './App.css';
+import Leaves from './components/Leaves';
+import AutumnDuskBackground from './components/AutumnDuskBackground';
+import Window from './components/Window';
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <Window />
       </AutumnDuskBackground>
     </section>
-  )
+  );
 }
 
-export default App
+export default App;

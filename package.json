@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "motion": "^12.42.2",
+    "prettier": "^3.9.6",
     "process": "^0.11.10",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
