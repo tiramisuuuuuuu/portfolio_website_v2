@@ -1,6 +1,7 @@
 import { ReactNode, useState } from 'react';
 
 import styles from './TerminalApp.module.css';
+import SkillsSection from './SkillsSection';
 
 function Command({
   command,
@@ -32,8 +33,11 @@ const COMMANDS = {
       <Command command="./about.sh" />,
       <Command
         command="cat welcome.txt"
-        body="Hi there! My name is Sreya and I am a M.S. AI student, currently looking for Software Engineering internships "
+        body="Hi there! My name is Sreya and I am a M.S. AI student, currently looking for a Software Engineering internship."
       />,
+      <Command command="skills">
+        <SkillsSection />
+      </Command>,
     ],
   },
 };
