@@ -1,45 +1,78 @@
 import Matter from 'matter-js';
-import React, { RefObject, useEffect, useRef } from 'react';
-import Draggable from 'react-draggable';
+import { useEffect, useRef, useState } from 'react';
 
 // module aliases
 var Engine = Matter.Engine,
   Bodies = Matter.Bodies,
-  Composite = Matter.Composite;
+  Composite = Matter.Composite,
+  Mouse = Matter.Mouse,
+  MouseConstraint = Matter.MouseConstraint,
+  World = Matter.World;
 
 const SKILLS = ['boxA', 'boxB'];
 
 export default function SkillsSection() {
-  const nodeRefs = useRef(new Map<string, RefObject<HTMLDivElement | null>>());
-  const dragIdRef = useRef<string>(null);
+  const [parentElem, setParentElem] = useState<HTMLDivElement | null>(null);
 
   const engineRef = useRef<Matter.Engine>(null);
   const bodiesRef = useRef(new Map<string, Matter.Body>());
 
   const requestAnimationFrameRef = useRef<number>(null);
-  const startTimeRef = useRef<number>(null);
+  const prevTimestampRef = useRef<number>(null);
 
   useEffect(() => {
     const animate = (timestamp: DOMHighResTimeStamp) => {
-      if (!startTimeRef.current) {
-        startTimeRef.current = timestamp;
+      if (!prevTimestampRef.current) {
+        prevTimestampRef.current = timestamp;
       }
 
-      const elapsed = timestamp - startTimeRef.current;
+      const elapsed = timestamp - prevTimestampRef.current;
+      prevTimestampRef.current = timestamp;
 
-      // requestAnimationFrameRef.current = requestAnimationFrame(animate);
+      if (engineRef.current) {
+        Engine.update(engineRef.current, elapsed);
+
+        bodiesRef.current.forEach((body, id) => {
+          const element = document.getElementById(id);
+
+          if (element) {
+            element.style.transform = `translate(${body.position.x}px, ${body.position.y}px)
+                    translate(-50%, -50%)
+                    rotate(${body.angle}rad)`;
+          }
+        });
+      }
+
+      requestAnimationFrameRef.current = requestAnimationFrame(animate);
     };
+
+    if (!parentElem) return;
 
     // create physics engine and bodies
     engineRef.current = Engine.create();
 
+    // accept mouse input in world
+    const mouse = Mouse.create(parentElem);
+    const mouseConstraint = MouseConstraint.create(engineRef.current, {
+      mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: {
+          visible: false,
+        },
+      },
+    });
+
+    World.add(engineRef.current.world, mouseConstraint);
+
     var boxA = Bodies.rectangle(400, 200, 80, 80);
     var boxB = Bodies.rectangle(450, 50, 80, 80);
-    var ground = Bodies.rectangle(400, 600, 800, 60, { isStatic: true });
+    var ground = Bodies.rectangle(400, 400, 800, 60, { isStatic: true });
 
     // save references to bodies
     bodiesRef.current.set('boxA', boxA);
     bodiesRef.current.set('boxB', boxB);
+    bodiesRef.current.set('ground', ground);
 
     // add all of the bodies to the world
     Composite.add(engineRef.current.world, [boxA, boxB, ground]);
@@ -52,21 +85,11 @@ export default function SkillsSection() {
         cancelAnimationFrame(requestAnimationFrameRef.current);
       }
     };
-  }, []);
-
-  function getNodeRef(skill: string) {
-    let ref = nodeRefs.current.get(skill);
-
-    if (!ref) {
-      ref = React.createRef<HTMLDivElement>();
-      nodeRefs.current.set(skill, ref);
-    }
-
-    return ref;
-  }
+  }, [parentElem]);
 
   return (
     <div
+      ref={(el) => setParentElem(el)}
       style={{
         position: 'relative',
         width: '100%',
@@ -74,30 +97,22 @@ export default function SkillsSection() {
         backgroundColor: 'grey',
       }}
     >
-      {SKILLS.map((skill) => {
-        const ref = getNodeRef(skill);
-
-        return (
-          <Draggable
-            key={`${skill}-draggable`}
-            nodeRef={ref}
-            onStart={() => {
-              dragIdRef.current = skill;
-            }}
-            onStop={() => {
-              dragIdRef.current = null;
-            }}
-          >
-            <div
-              ref={ref}
-              id={skill}
-              style={{ width: 80, height: 80, backgroundColor: 'green' }}
-            >
-              {skill}
-            </div>
-          </Draggable>
-        );
-      })}
+      {SKILLS.map((skill) => (
+        <div
+          id={skill}
+          style={{
+            width: 80,
+            height: 80,
+            backgroundColor: 'green',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            transform: `translate(50%, %50)`,
+          }}
+        >
+          {skill}
+        </div>
+      ))}
     </div>
   );
 }
