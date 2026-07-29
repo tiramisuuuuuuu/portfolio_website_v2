@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 
 import styles from './Window.module.css';
@@ -12,10 +12,12 @@ export default function Window({
   minimized,
   minimize,
   close,
+  children,
 }: {
   minimized: boolean;
   minimize: () => void;
   close: () => void;
+  children?: ReactNode;
 }) {
   const nodeRef = useRef<HTMLDivElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
@@ -139,7 +141,7 @@ export default function Window({
               </button>
             </div>
           </div>
-          <div className={styles.contentBox} />
+          <div className={styles.contentBox}>{children}</div>
         </div>
       </Draggable>
     </div>

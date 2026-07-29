@@ -2,6 +2,7 @@ import { ReactNode, useState } from 'react';
 import { IoTerminal } from 'react-icons/io5';
 import styles from './DesktopIcons.module.css';
 import Window from './Window';
+import TerminalApp from './TerminalApp';
 
 const CLOSED = 0;
 const OPEN = 1;
@@ -53,7 +54,9 @@ export default function DesktopIcons() {
             setActiveApps((prev) => ({ ...prev, terminal: MINIMIZED }))
           }
           close={() => setActiveApps((prev) => ({ ...prev, terminal: CLOSED }))}
-        />
+        >
+          <TerminalApp />
+        </Window>
       ) : null}
     </div>
   );
