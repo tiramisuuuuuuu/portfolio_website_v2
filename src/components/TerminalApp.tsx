@@ -14,11 +14,11 @@ function Command({
 }) {
   return (
     <div className={styles.entireCommand}>
-      <p className={styles.header}>
+      <div className={styles.header}>
         user@sreya-desktop
         <p className={styles.path}>{':~$'}</p>
         <p className={styles.command}>{command}</p>
-      </p>
+      </div>
 
       <p className={styles.body}>{body}</p>
 
@@ -35,15 +35,24 @@ const COMMANDS = {
         command="cat welcome.txt"
         body="Hi there! My name is Sreya and I am a M.S. AI student, currently looking for a Software Engineering internship."
       />,
-      <Command command="skills">
-        <SkillsSection />
-      </Command>,
+    ],
+  },
+  skills: {
+    sections: [
+      <Command command="skills" />,
+      <div className={styles.oneLine}>
+        <p>Loading emulation...</p>
+        <p style={{ color: 'lightgreen' }}>ok</p>
+      </div>,
+      <SkillsSection />,
     ],
   },
 };
 
 export default function TerminalApp() {
-  const [activeCommand, setActiveCommand] = useState<'about'>('about');
+  const [activeCommand, setActiveCommand] = useState<'about' | 'skills'>(
+    'skills'
+  );
 
   return (
     <div className={styles.content}>

@@ -44,3 +44,14 @@
   width: 100%;
   text-align: start;
 }
+
+.oneLine {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  color: #f4f0ff;
+  font-size: medium;
+  font-family: 'Space Mono', monospace;
+}

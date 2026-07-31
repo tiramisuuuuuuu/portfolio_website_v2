@@ -3,6 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './SkillsSection.module.css';
 import HiSvg from '../assets/block-letters.svg';
 import rectanglesJson from '../assets/rectangles.json';
+import { FaAws, FaFigma, FaNode, FaPython, FaReact } from 'react-icons/fa';
+import { DiDjango } from 'react-icons/di';
+import { BiLogoPostgresql } from 'react-icons/bi';
+import { FcLinux } from 'react-icons/fc';
+import { SiPostman, SiTypescript, SiVite } from 'react-icons/si';
+import { RiNextjsFill, RiTailwindCssFill } from 'react-icons/ri';
+import { FaCss } from 'react-icons/fa6';
 
 // module aliases
 var Engine = Matter.Engine,
@@ -11,7 +18,22 @@ var Engine = Matter.Engine,
   Composite = Matter.Composite,
   Query = Matter.Query;
 
-const SKILLS = ['boxA', 'boxB'];
+const SKILLS = {
+  Python: <FaPython color="#306998" size={40} />,
+  AWS: <FaAws color="orange" size={40} />,
+  React: <FaReact color="#61dbfb" size={40} />,
+  Django: <DiDjango color="#092E20" size={40} />,
+  Postgres: <BiLogoPostgresql color="#0064a5" size={40} />,
+  Linux: <FcLinux size={40} />,
+  Figma: <FaFigma color="#f24e1e" size={40} />,
+  Postman: <SiPostman color="#FF6C37" size={30} />,
+  Typescript: <SiTypescript color="#3178C6" size={30} />,
+  Nodejs: <FaNode color="#339933" size={40} />,
+  Nextjs: <RiNextjsFill color="black" size={40} />,
+  Tailwind: <RiTailwindCssFill color="#22D3EE" size={40} />,
+  CSS: <FaCss color="#663399" size={40} />,
+  Vite: <SiVite color="#6B1EB9" size={30} />,
+};
 
 export default function SkillsSection() {
   const [parentElem, setParentElem] = useState<HTMLDivElement | null>(null);
@@ -98,7 +120,10 @@ export default function SkillsSection() {
             body.bounds.max.x < 0
           ) {
             Body.setVelocity(body, { x: 0, y: 0 });
-            Body.setPosition(body, { x: 80, y: 80 });
+            Body.setPosition(body, {
+              x: Math.random() * parentDimensions.current!.width,
+              y: 0,
+            });
           }
         });
       }
@@ -111,28 +136,31 @@ export default function SkillsSection() {
     // create physics engine and bodies
     engineRef.current = Engine.create();
 
-    const boxA = Bodies.rectangle(400, 200, 80, 80);
-    const boxB = Bodies.rectangle(450, 50, 80, 80);
-    const ground = Bodies.rectangle(400, 400, 800, 60, { isStatic: true });
-    const leftWall = Bodies.rectangle(0, 200, 60, 400, { isStatic: true });
-    const rightWall = Bodies.rectangle(800, 200, 60, 400, { isStatic: true });
-    const topWall = Bodies.rectangle(400, 0, 800, 60, { isStatic: true });
+    // create bodies for each skill
+    Object.keys(SKILLS).forEach((id) => {
+      const body = Bodies.circle(Math.random() * 800 + 10, 0, 25);
+
+      bodiesRef.current.set(id, body);
+
+      Composite.add(engineRef.current!.world, [body]);
+    });
+
+    // create a static body for the svg image
+    createSvgBodies(200, 200);
+
+    const ground = Bodies.rectangle(400, 400, 800, 10, { isStatic: true });
+    const leftWall = Bodies.rectangle(0, 200, 10, 400, { isStatic: true });
+    const rightWall = Bodies.rectangle(800, 200, 10, 400, { isStatic: true });
+    const topWall = Bodies.rectangle(400, 0, 800, 10, { isStatic: true });
 
     // save references to bodies
-    bodiesRef.current.set('boxA', boxA);
-    bodiesRef.current.set('boxB', boxB);
     bodiesRef.current.set('ground', ground);
     bodiesRef.current.set('leftWall', leftWall);
     bodiesRef.current.set('rightWall', rightWall);
     bodiesRef.current.set('topWall', topWall);
 
-    // create a static body for the svg image
-    createSvgBodies(200, 200);
-
     // add all of the bodies to the world
     Composite.add(engineRef.current.world, [
-      boxA,
-      boxB,
       ground,
       leftWall,
       rightWall,
@@ -174,16 +202,16 @@ export default function SkillsSection() {
           return;
 
         // create new walls with updated widths / heights and positions
-        const newGround = Bodies.rectangle(width / 2, height, width, 60, {
+        const newGround = Bodies.rectangle(width / 2, height, width, 10, {
           isStatic: true,
         });
-        const newLeftWall = Bodies.rectangle(0, height / 2, 60, height, {
+        const newLeftWall = Bodies.rectangle(0, height / 2, 10, height, {
           isStatic: true,
         });
-        const newRightWall = Bodies.rectangle(width, height / 2, 60, height, {
+        const newRightWall = Bodies.rectangle(width, height / 2, 10, height, {
           isStatic: true,
         });
-        const newTopWall = Bodies.rectangle(width / 2, 0, width, 60, {
+        const newTopWall = Bodies.rectangle(width / 2, 0, width, 10, {
           isStatic: true,
         });
 
@@ -297,7 +325,6 @@ export default function SkillsSection() {
       ref={(el) => setParentElem(el)}
       style={{
         flex: 1,
-        backgroundColor: 'grey',
         position: 'relative',
         overflow: 'hidden',
 
@@ -305,76 +332,31 @@ export default function SkillsSection() {
         justifyContent: 'center',
         alignItems: 'center',
       }}
+      className={styles.container}
     >
-      {SKILLS.map((skill) => (
+      {Object.entries(SKILLS).map(([skill, icon]) => (
         <div
           id={skill}
           style={{
-            width: 80,
-            height: 80,
-            backgroundColor: 'green',
+            width: 50,
+            height: 50,
+            borderRadius: 40,
+
             position: 'absolute',
             left: 0,
             top: 0,
             transform: `translate(50%, %50)`,
           }}
+          className={styles.iconDiv}
         >
-          {skill}
+          {icon}
         </div>
       ))}
-      <div
-        id={'ground'}
-        style={{
-          width: '100%',
-          height: 10,
-          backgroundColor: 'green',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          transform: `translate(50%, %50)`,
-        }}
-      />
-      <div
-        id={'topWall'}
-        style={{
-          width: '100%',
-          height: 10,
-          backgroundColor: 'blue',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          transform: `translate(50%, %50)`,
-        }}
-      />
-      <div
-        id={'rightWall'}
-        style={{
-          width: 10,
-          height: '100%',
-          backgroundColor: 'pink',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          transform: `translate(50%, %50)`,
-        }}
-      />
-      <div
-        id={'leftWall'}
-        style={{
-          width: 10,
-          height: '100%',
-          backgroundColor: 'yellow',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          transform: `translate(50%, %50)`,
-        }}
-      />
       <img
         src={HiSvg}
         ref={(el) => setSvgElem(el)}
         width="200"
-        style={{ width: '80%' }}
+        style={{ width: '50%' }}
         draggable={false}
         className={styles.hiSvg}
       />
