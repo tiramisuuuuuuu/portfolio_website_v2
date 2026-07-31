@@ -1,6 +1,8 @@
 import Matter from 'matter-js';
 import { useEffect, useRef, useState } from 'react';
 import styles from './SkillsSection.module.css';
+import HiSvg from '../assets/block-letters.svg';
+import rectanglesJson from '../assets/rectangles.json';
 
 // module aliases
 var Engine = Matter.Engine,
@@ -14,13 +16,54 @@ const SKILLS = ['boxA', 'boxB'];
 export default function SkillsSection() {
   const [parentElem, setParentElem] = useState<HTMLDivElement | null>(null);
   const parentDimensions = useRef<{ width: number; height: number }>(null);
+  const [svgElem, setSvgElem] = useState<HTMLImageElement | null>(null);
 
   const engineRef = useRef<Matter.Engine>(null);
   const bodiesRef = useRef(new Map<string, Matter.Body>());
+  const svgBodiesRef = useRef<Matter.Body[]>(null);
   const mousePosRef = useRef<{ x: number; y: number }>(null);
   const draggedBodyRef = useRef<string>(null);
 
   const requestAnimationFrameRef = useRef<number>(null);
+
+  const createSvgBodies = (
+    targetCenterX: number,
+    targetCenterY: number,
+    newWidth?: number,
+    newHeight?: number
+  ) => {
+    if (!engineRef.current) return;
+
+    const oldSvgBodies = svgBodiesRef.current;
+    svgBodiesRef.current = null;
+
+    if (oldSvgBodies) {
+      oldSvgBodies.forEach((b) => {
+        Composite.remove(engineRef.current!.world, b);
+      });
+    }
+
+    const SVG_WIDTH = 472;
+    const SVG_HEIGHT = 52;
+    const scaleX = newWidth ? newWidth / SVG_WIDTH : 1;
+    const scaleY = newHeight ? newHeight / SVG_HEIGHT : 1;
+
+    const svgBodies = rectanglesJson.map((rect) => {
+      // Move rectangle relative to SVG center, scale, then move to Matter center
+      const x = (rect.x - SVG_WIDTH / 2) * scaleX + targetCenterX;
+
+      const y = (rect.y - SVG_HEIGHT / 2) * scaleY + targetCenterY;
+
+      return Bodies.rectangle(x, y, rect.width * scaleX, rect.height * scaleY, {
+        isStatic: true,
+        angle: (rect.angle * Math.PI) / 180,
+      });
+    });
+
+    svgBodiesRef.current = svgBodies;
+
+    Composite.add(engineRef.current.world, svgBodies);
+  };
 
   useEffect(() => {
     const animate = (_: DOMHighResTimeStamp) => {
@@ -82,6 +125,9 @@ export default function SkillsSection() {
     bodiesRef.current.set('leftWall', leftWall);
     bodiesRef.current.set('rightWall', rightWall);
     bodiesRef.current.set('topWall', topWall);
+
+    // create a static body for the svg image
+    createSvgBodies(200, 200);
 
     // add all of the bodies to the world
     Composite.add(engineRef.current.world, [
@@ -169,6 +215,29 @@ export default function SkillsSection() {
   }, [parentElem]);
 
   useEffect(() => {
+    if (!svgElem) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+
+        if (parentDimensions.current) {
+          createSvgBodies(
+            parentDimensions.current.width / 2,
+            parentDimensions.current.height / 2,
+            width,
+            height
+          );
+        }
+      }
+    });
+
+    resizeObserver.observe(svgElem);
+
+    return () => resizeObserver.disconnect();
+  }, [svgElem]);
+
+  useEffect(() => {
     if (!parentElem) return;
 
     const handlePointerDown = (e: PointerEvent) => {
@@ -231,6 +300,10 @@ export default function SkillsSection() {
         backgroundColor: 'grey',
         position: 'relative',
         overflow: 'hidden',
+
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
       {SKILLS.map((skill) => (
@@ -296,6 +369,14 @@ export default function SkillsSection() {
           top: 0,
           transform: `translate(50%, %50)`,
         }}
+      />
+      <img
+        src={HiSvg}
+        ref={(el) => setSvgElem(el)}
+        width="200"
+        style={{ width: '80%' }}
+        draggable={false}
+        className={styles.hiSvg}
       />
     </div>
   );

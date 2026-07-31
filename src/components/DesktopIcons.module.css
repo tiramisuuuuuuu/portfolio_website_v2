@@ -17,4 +17,5 @@
 
 .iconText {
   font-size: small;
+  user-select: none;
 }

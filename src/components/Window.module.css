@@ -47,6 +47,7 @@
   font-family:
     'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
     'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  user-select: none;
 }
 
 .bttns {
@@ -79,6 +80,7 @@
   justify-content: center;
   align-items: center;
   color: #a89bc9;
+  user-select: none;
 }
 
 .windowButton:hover {
