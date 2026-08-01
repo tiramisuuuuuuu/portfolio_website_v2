@@ -65,8 +65,8 @@ export default function SkillsSection() {
       });
     }
 
-    const SVG_WIDTH = 472;
-    const SVG_HEIGHT = 52;
+    const SVG_WIDTH = 478;
+    const SVG_HEIGHT = 81;
     const scaleX = newWidth ? newWidth / SVG_WIDTH : 1;
     const scaleY = newHeight ? newHeight / SVG_HEIGHT : 1;
 

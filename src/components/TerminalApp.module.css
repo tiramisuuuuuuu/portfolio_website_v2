@@ -1,12 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo+Play:wght@200..1000&family=Coming+Soon&family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-.content {
+.container {
   width: 100%;
   height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.content {
+  flex: 1;
   box-sizing: border-box;
   padding-top: 20px;
   padding-right: 10px;
   padding-left: 10px;
+  padding-bottom: 10px;
 
   display: flex;
   flex-direction: column;
@@ -54,4 +63,58 @@
   color: #f4f0ff;
   font-size: medium;
   font-family: 'Space Mono', monospace;
+}
+
+.commandLine {
+  width: 100%;
+  height: 70px;
+  border-color: #a89bc937;
+  border-width: 0px;
+  border-top-width: 1px;
+  border-style: solid;
+  box-sizing: border-box;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  font-family: 'Space Mono', monospace;
+  gap: 3px;
+}
+
+.cmdLineBttn {
+  height: 30px;
+  color: #f4f0ff;
+  font-size: small;
+  font-family: 'Space Mono', monospace;
+  border-radius: 10px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.cmdLineBttn:hover {
+  opacity: 1;
+  background-color: #a89bc97c;
+}
+
+.inputBox {
+  flex: 1;
+  margin-left: 4px;
+  min-width: 100px;
+  height: 30px;
+  background-color: transparent;
+  font-family: inherit;
+  border: none;
+  outline: none;
+  color: white;
+  overflow: hidden;
+}
+
+.inputBox::placeholder {
+  color: #a89bc9;
 }
