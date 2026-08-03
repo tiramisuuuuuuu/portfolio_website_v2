@@ -327,6 +327,7 @@ export default function SkillsSection() {
         flex: 1,
         position: 'relative',
         overflow: 'hidden',
+        minHeight: 300,
 
         display: 'flex',
         justifyContent: 'center',
@@ -358,6 +359,7 @@ export default function SkillsSection() {
         width="200"
         style={{ width: '50%' }}
         draggable={false}
+        onDragStart={(e) => e.preventDefault()}
         className={styles.hiSvg}
       />
     </div>

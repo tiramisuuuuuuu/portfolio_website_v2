@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { IoTerminal } from 'react-icons/io5';
 import styles from './DesktopIcons.module.css';
 import Window from './Window';
@@ -27,8 +27,13 @@ function AppIcon({
 
 export default function DesktopIcons() {
   const [activeApps, setActiveApps] = useState({
-    terminal: CLOSED,
+    terminal: OPEN,
   });
+  const firstMount = useRef(true);
+
+  useEffect(() => {
+    firstMount.current = false;
+  }, []);
 
   return (
     <div
@@ -54,6 +59,7 @@ export default function DesktopIcons() {
             setActiveApps((prev) => ({ ...prev, terminal: MINIMIZED }))
           }
           close={() => setActiveApps((prev) => ({ ...prev, terminal: CLOSED }))}
+          skipAnimation={firstMount.current}
         >
           <TerminalApp />
         </Window>

@@ -7,16 +7,19 @@ import styles from './Window.module.css';
 import { IoBrowsersOutline } from 'react-icons/io5';
 import { MdOutlineClose } from 'react-icons/md';
 import { FaTerminal } from 'react-icons/fa';
+import { motion } from 'motion/react';
 
 export default function Window({
   minimized,
   minimize,
   close,
+  skipAnimation,
   children,
 }: {
   minimized: boolean;
   minimize: () => void;
   close: () => void;
+  skipAnimation?: boolean;
   children?: ReactNode;
 }) {
   const nodeRef = useRef<HTMLDivElement>(null);
@@ -85,63 +88,71 @@ export default function Window({
         <div
           ref={nodeRef}
           className={`${styles.entireWindow} ${isSmall && styles.smallWindow}`}
-          style={{
-            pointerEvents: 'auto',
-          }}
-          tabIndex={0}
-          onFocusCapture={() => console.log('Window focused')}
         >
-          <div
-            className={`${styles.navBar} ${isDragging && styles.dragging} drag-handle`}
+          <motion.div
+            className={styles.motionWrapper}
+            style={{
+              pointerEvents: 'auto',
+            }}
+            tabIndex={0}
+            onFocusCapture={() => console.log('Window focused')}
+            initial={!skipAnimation && { scale: 0 }}
+            animate={{
+              scale: 1,
+            }}
           >
             <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 10,
-              }}
+              className={`${styles.navBar} ${isDragging && styles.dragging} drag-handle`}
             >
-              <FaTerminal color="#a89bc9" size={25} />
-              <p className={styles.heading}>Portfolio</p>
-            </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 10,
+                }}
+              >
+                <FaTerminal color="#a89bc9" size={25} />
+                <p className={styles.heading}>Portfolio</p>
+              </div>
 
-            <div className={styles.bttns}>
-              <button
-                onClick={() => {
-                  console.log('Minimize CLICKED');
-                  minimize();
-                }}
-                className={styles.bttn}
-              >
-                <div className={styles.windowButton}>_</div>
-              </button>
-              <button
-                onClick={() => {
-                  console.log('Resize CLICKED');
-                  setIsSmall((prev) => !prev);
-                }}
-                className={styles.bttn}
-              >
-                <div className={styles.windowButton}>
-                  <IoBrowsersOutline />
-                </div>
-              </button>
-              <button
-                onClick={() => {
-                  console.log('Close CLICKED');
-                  close();
-                }}
-                className={styles.bttn}
-              >
-                <div className={styles.windowButton}>
-                  <MdOutlineClose />
-                </div>
-              </button>
+              <div className={styles.bttns}>
+                <button
+                  onClick={() => {
+                    console.log('Minimize CLICKED');
+                    minimize();
+                  }}
+                  className={styles.bttn}
+                >
+                  <div className={styles.windowButton}>_</div>
+                </button>
+                <button
+                  onClick={() => {
+                    console.log('Resize CLICKED');
+                    setIsSmall((prev) => !prev);
+                  }}
+                  className={styles.bttn}
+                >
+                  <div className={styles.windowButton}>
+                    <IoBrowsersOutline />
+                  </div>
+                </button>
+                <button
+                  onClick={() => {
+                    console.log('Close CLICKED');
+                    close();
+                  }}
+                  className={styles.bttn}
+                >
+                  <div className={styles.windowButton}>
+                    <MdOutlineClose />
+                  </div>
+                </button>
+              </div>
             </div>
-          </div>
-          <div className={styles.contentBox}>{children}</div>
+            <div className={styles.contentBox}>{children}</div>
+          </motion.div>
         </div>
       </Draggable>
     </div>

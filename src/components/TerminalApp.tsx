@@ -72,7 +72,7 @@ function MotionWrapper({
 export default function TerminalApp() {
   const [activeCommand, setActiveCommand] = useState<
     'about' | 'skills' | 'projects' | 'contact' | 'help' | null
-  >('skills');
+  >('about');
   const inputText = useRef('');
   const [submittedText, setSubmittedText] = useState('');
   const [parentElem, setParentElem] = useState<HTMLDivElement | null>(null);
@@ -85,7 +85,7 @@ export default function TerminalApp() {
           <Command command="./about.sh" isSmall={isSmall} />,
           <Command
             command="cat welcome.txt"
-            body="Hi there! My name is Sreya and I am a M.S. AI student, currently looking for a Software Engineering internship."
+            body="Welcome to my desktop-theme portfolio site ☕︎! My name is Sreya and I am an incoming M.S. AI student, currently looking for a Software Engineering internship."
             isSmall={isSmall}
           />,
         ],
@@ -197,6 +197,7 @@ export default function TerminalApp() {
           )}
         </motion.div>
       </AnimatePresence>
+
       <div className={styles.commandLine}>
         <p className={styles.path}>{'~$'}</p>
         <input
