@@ -338,6 +338,7 @@ export default function SkillsSection() {
       {Object.entries(SKILLS).map(([skill, icon]) => (
         <div
           id={skill}
+          key={`skill-${skill}`}
           style={{
             width: 50,
             height: 50,

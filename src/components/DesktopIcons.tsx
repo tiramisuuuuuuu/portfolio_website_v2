@@ -3,6 +3,7 @@ import { IoTerminal } from 'react-icons/io5';
 import styles from './DesktopIcons.module.css';
 import Window from './Window';
 import TerminalApp from './TerminalApp';
+import { AppsContext } from './appsContext';
 
 const CLOSED = 0;
 const OPEN = 1;
@@ -27,13 +28,88 @@ function AppIcon({
 
 export default function DesktopIcons() {
   const [activeApps, setActiveApps] = useState({
-    terminal: OPEN,
+    terminal: {
+      status: OPEN,
+      zIndex: 0,
+    },
+    photos: {
+      status: CLOSED,
+      zIndex: 0,
+    },
   });
   const firstMount = useRef(true);
+  const latestZIndex = useRef(1);
 
   useEffect(() => {
     firstMount.current = false;
   }, []);
+
+  useEffect(() => {
+    let timerId: number | undefined;
+    const startTimer = () => {
+      const now = new Date();
+
+      const elem = document.getElementById('bottom-bar');
+      if (elem) {
+        const hrs = now.getHours();
+        elem.innerHTML = `${hrs % 12 === 0 ? 12 : hrs % 12}:${now.getMinutes()} ${hrs > 11 ? 'PM' : 'AM'}`;
+      }
+
+      const delay = 60000 - (now.getTime() % 60000);
+      timerId = setTimeout(startTimer, delay);
+    };
+    startTimer();
+    return () => clearTimeout(timerId);
+  }, []);
+
+  const openApp = (app: 'terminal' | 'photos') => {
+    setActiveApps((prev) => {
+      const prevZIndex = prev[app].zIndex;
+      let zIndex;
+
+      if (prevZIndex === latestZIndex.current) {
+        zIndex = prevZIndex;
+      } else {
+        latestZIndex.current += 1;
+        zIndex = latestZIndex.current;
+      }
+      return { ...prev, [app]: { status: OPEN, zIndex: zIndex } };
+    });
+
+    if (latestZIndex.current == 100) {
+      setActiveApps((prev) => {
+        const copy = { ...prev };
+        const sortedArr = Object.entries(prev).sort(
+          (a, b) => a[1].zIndex - b[1].zIndex
+        );
+        sortedArr.forEach((entry, idx) => {
+          const key = entry[0];
+          const value = entry[1];
+          copy[key as keyof typeof prev] = {
+            status: value.status,
+            zIndex: idx,
+          };
+        });
+        return copy;
+      });
+
+      latestZIndex.current = Object.keys(activeApps).length;
+    }
+  };
+
+  const minimizeApp = (app: 'terminal' | 'photos') => {
+    setActiveApps((prev) => ({
+      ...prev,
+      [app]: { status: MINIMIZED, zIndex: prev[app].zIndex },
+    }));
+  };
+
+  const closeApp = (app: 'terminal' | 'photos') => {
+    setActiveApps((prev) => ({
+      ...prev,
+      [app]: { status: CLOSED, zIndex: prev[app].zIndex },
+    }));
+  };
 
   return (
     <div
@@ -47,23 +123,52 @@ export default function DesktopIcons() {
         alignItems: 'flex-end',
       }}
     >
-      <AppIcon
-        icon={<IoTerminal color="grey" size={50} />}
-        appName="Portfolio"
-        onClick={() => setActiveApps((prev) => ({ ...prev, terminal: OPEN }))}
-      />
-      {activeApps.terminal ? (
-        <Window
-          minimized={activeApps.terminal === MINIMIZED}
-          minimize={() =>
-            setActiveApps((prev) => ({ ...prev, terminal: MINIMIZED }))
-          }
-          close={() => setActiveApps((prev) => ({ ...prev, terminal: CLOSED }))}
-          skipAnimation={firstMount.current}
+      <div className={styles.firstRow}>
+        <AppIcon
+          icon={<IoTerminal color="grey" size={50} />}
+          appName="Portfolio"
+          onClick={() => openApp('terminal')}
+        />
+      </div>
+      <AppsContext value={{ openApp, closeApp }}>
+        <div
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column-reverse',
+            pointerEvents: 'none',
+          }}
         >
-          <TerminalApp />
-        </Window>
-      ) : null}
+          <div id="bottom-bar" className={styles.bottomBar} />
+
+          <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
+            {activeApps.terminal.status ? (
+              <Window
+                minimized={activeApps.terminal.status === MINIMIZED}
+                minimize={() => minimizeApp('terminal')}
+                close={() => closeApp('terminal')}
+                skipAnimation={firstMount.current}
+                focusWindow={() => openApp('terminal')}
+                zIndex={activeApps.terminal.zIndex}
+              >
+                <TerminalApp />
+              </Window>
+            ) : null}
+            {activeApps.photos.status && activeApps.terminal.status ? (
+              <Window
+                width={250}
+                height={300}
+                initialPos="middle-right"
+                minimized={activeApps.terminal.status === MINIMIZED}
+                focusWindow={() => openApp('photos')}
+                zIndex={activeApps.photos.zIndex}
+              ></Window>
+            ) : null}
+          </div>
+        </div>
+      </AppsContext>
     </div>
   );
 }

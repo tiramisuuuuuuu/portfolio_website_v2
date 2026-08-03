@@ -1,9 +1,17 @@
-import { ReactNode, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  ReactNode,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import styles from './TerminalApp.module.css';
 import SkillsSection from './SkillsSection';
 import { AnimatePresence, stagger } from 'motion/react';
 import { motion } from 'motion/react';
+import { AppsContext } from './appsContext';
 
 function Command({
   command,
@@ -54,15 +62,20 @@ const parentVariants = {
 
 function MotionWrapper({
   flex,
+  onAnimationComplete,
   children,
 }: {
   flex?: boolean;
+  onAnimationComplete?: () => void;
   children: ReactNode;
 }) {
   return (
     <motion.div
       variants={itemVariants}
       style={flex ? { display: 'flex', flex: 1 } : undefined}
+      onAnimationComplete={
+        onAnimationComplete ? () => onAnimationComplete() : undefined
+      }
     >
       {children}
     </motion.div>
@@ -77,6 +90,8 @@ export default function TerminalApp() {
   const [submittedText, setSubmittedText] = useState('');
   const [parentElem, setParentElem] = useState<HTMLDivElement | null>(null);
   const [isSmall, setIsSmall] = useState(false);
+
+  const { openApp, closeApp } = useContext(AppsContext);
 
   const COMMANDS = useMemo(
     () => ({
@@ -142,20 +157,28 @@ export default function TerminalApp() {
 
   const handleKeyDown = (e: { key: string }) => {
     if (e.key === 'Enter') {
+      const input = inputText.current;
+
       if (
-        inputText.current === 'about' ||
-        inputText.current === 'skills' ||
-        inputText.current === 'projects' ||
-        inputText.current === 'contact' ||
-        inputText.current === 'help'
+        input === 'about' ||
+        input === 'skills' ||
+        input === 'projects' ||
+        input === 'contact' ||
+        input === 'help'
       ) {
-        setActiveCommand(inputText.current);
+        setActiveCommand(input);
       } else {
         setActiveCommand(null);
-        setSubmittedText(inputText.current);
+        setSubmittedText(input);
       }
     }
   };
+
+  useLayoutEffect(() => {
+    if (activeCommand !== 'about') {
+      closeApp('photos');
+    }
+  }, [activeCommand]);
 
   return (
     <div className={styles.container} ref={(el) => setParentElem(el)}>
@@ -176,6 +199,11 @@ export default function TerminalApp() {
               <MotionWrapper
                 key={`${activeCommand}-${idx}`}
                 flex={activeCommand === 'skills' && idx === 2}
+                onAnimationComplete={
+                  activeCommand === 'about' && idx === 1
+                    ? () => openApp('photos')
+                    : undefined
+                }
               >
                 {sectionDiv}
               </MotionWrapper>

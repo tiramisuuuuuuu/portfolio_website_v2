@@ -14,12 +14,22 @@ export default function Window({
   minimize,
   close,
   skipAnimation,
+  focusWindow,
+  zIndex,
+  width,
+  height,
+  initialPos = 'center',
   children,
 }: {
-  minimized: boolean;
-  minimize: () => void;
-  close: () => void;
+  minimized?: boolean;
+  minimize?: () => void;
+  close?: () => void;
   skipAnimation?: boolean;
+  focusWindow: () => void;
+  zIndex: number;
+  width?: number;
+  height?: number;
+  initialPos?: 'top-right' | 'middle-right' | 'bottom-right' | 'center';
   children?: ReactNode;
 }) {
   const nodeRef = useRef<HTMLDivElement>(null);
@@ -58,8 +68,20 @@ export default function Window({
     const parent = parentRef.current;
     const child = nodeRef.current;
 
-    const x = (parent.clientWidth - child.offsetWidth) / 2;
-    const y = (parent.clientHeight - child.offsetHeight) / 2;
+    // case "center"
+    let x = (parent.clientWidth - child.offsetWidth) / 2;
+    let y = (parent.clientHeight - child.offsetHeight) / 2;
+
+    if (initialPos === 'top-right') {
+      x = parent.clientWidth - child.offsetWidth;
+      y = child.offsetHeight / 2;
+    } else if (initialPos === 'middle-right') {
+      x = parent.clientWidth - child.offsetWidth;
+      y = (parent.clientHeight - child.offsetHeight) / 2;
+    } else if (initialPos === 'bottom-right') {
+      x = parent.clientWidth - child.offsetWidth / 2;
+      y = parent.clientWidth - child.offsetHeight / 2;
+    }
 
     setPosition({ x, y });
   }, []);
@@ -73,6 +95,7 @@ export default function Window({
         height: '100%',
         pointerEvents: 'none',
         display: minimized ? 'none' : 'block',
+        zIndex: zIndex,
       }}
     >
       <Draggable
@@ -88,6 +111,7 @@ export default function Window({
         <div
           ref={nodeRef}
           className={`${styles.entireWindow} ${isSmall && styles.smallWindow}`}
+          style={{ width: width, height: height }}
         >
           <motion.div
             className={styles.motionWrapper}
@@ -95,7 +119,7 @@ export default function Window({
               pointerEvents: 'auto',
             }}
             tabIndex={0}
-            onFocusCapture={() => console.log('Window focused')}
+            onFocusCapture={() => focusWindow()}
             initial={!skipAnimation && { scale: 0 }}
             animate={{
               scale: 1,
@@ -118,37 +142,43 @@ export default function Window({
               </div>
 
               <div className={styles.bttns}>
-                <button
-                  onClick={() => {
-                    console.log('Minimize CLICKED');
-                    minimize();
-                  }}
-                  className={styles.bttn}
-                >
-                  <div className={styles.windowButton}>_</div>
-                </button>
-                <button
-                  onClick={() => {
-                    console.log('Resize CLICKED');
-                    setIsSmall((prev) => !prev);
-                  }}
-                  className={styles.bttn}
-                >
-                  <div className={styles.windowButton}>
-                    <IoBrowsersOutline />
-                  </div>
-                </button>
-                <button
-                  onClick={() => {
-                    console.log('Close CLICKED');
-                    close();
-                  }}
-                  className={styles.bttn}
-                >
-                  <div className={styles.windowButton}>
-                    <MdOutlineClose />
-                  </div>
-                </button>
+                {minimize && (
+                  <button
+                    onClick={() => {
+                      console.log('Minimize CLICKED');
+                      minimize();
+                    }}
+                    className={styles.bttn}
+                  >
+                    <div className={styles.windowButton}>_</div>
+                  </button>
+                )}
+                {!width && !height && (
+                  <button
+                    onClick={() => {
+                      console.log('Resize CLICKED');
+                      setIsSmall((prev) => !prev);
+                    }}
+                    className={styles.bttn}
+                  >
+                    <div className={styles.windowButton}>
+                      <IoBrowsersOutline />
+                    </div>
+                  </button>
+                )}
+                {close && (
+                  <button
+                    onClick={() => {
+                      console.log('Close CLICKED');
+                      close();
+                    }}
+                    className={styles.bttn}
+                  >
+                    <div className={styles.windowButton}>
+                      <MdOutlineClose />
+                    </div>
+                  </button>
+                )}
               </div>
             </div>
             <div className={styles.contentBox}>{children}</div>
