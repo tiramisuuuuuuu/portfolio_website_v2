@@ -52,7 +52,7 @@ export default function DesktopIcons() {
       const elem = document.getElementById('bottom-bar');
       if (elem) {
         const hrs = now.getHours();
-        elem.innerHTML = `${hrs % 12 === 0 ? 12 : hrs % 12}:${now.getMinutes()} ${hrs > 11 ? 'PM' : 'AM'}`;
+        elem.innerHTML = `${hrs % 12 === 0 ? 12 : hrs % 12}:${String(now.getMinutes()).padStart(2, '0')} ${hrs > 11 ? 'PM' : 'AM'}`;
       }
 
       const delay = 60000 - (now.getTime() % 60000);
@@ -148,7 +148,10 @@ export default function DesktopIcons() {
               <Window
                 minimized={activeApps.terminal.status === MINIMIZED}
                 minimize={() => minimizeApp('terminal')}
-                close={() => closeApp('terminal')}
+                close={() => {
+                  closeApp('terminal');
+                  closeApp('photos');
+                }}
                 skipAnimation={firstMount.current}
                 focusWindow={() => openApp('terminal')}
                 zIndex={activeApps.terminal.zIndex}
