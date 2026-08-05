@@ -4,6 +4,7 @@ import styles from './DesktopIcons.module.css';
 import Window from './Window';
 import TerminalApp from './TerminalApp';
 import { AppsContext } from './appsContext';
+import Churro from './Churro';
 
 const CLOSED = 0;
 const OPEN = 1;
@@ -144,6 +145,8 @@ export default function DesktopIcons() {
           <div id="bottom-bar" className={styles.bottomBar} />
 
           <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
+            <Churro />
+
             {activeApps.terminal.status ? (
               <Window
                 minimized={activeApps.terminal.status === MINIMIZED}
