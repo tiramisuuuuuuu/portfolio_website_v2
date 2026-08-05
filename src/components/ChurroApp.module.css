@@ -1,0 +1,16 @@
+.emoticonContainer {
+  font-size: x-large;
+  height: 50px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.quotes {
+  height: 20px;
+  margin-top: 20px;
+  font-family:
+    'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}

@@ -5,6 +5,7 @@ import Window from './Window';
 import TerminalApp from './TerminalApp';
 import { AppsContext } from './appsContext';
 import Churro from './Churro';
+import ChurroApp from './ChurroApp';
 
 const CLOSED = 0;
 const OPEN = 1;
@@ -37,9 +38,14 @@ export default function DesktopIcons() {
       status: CLOSED,
       zIndex: 0,
     },
+    churro: {
+      status: OPEN,
+      zIndex: 0,
+    },
   });
   const firstMount = useRef(true);
   const latestZIndex = useRef(1);
+  const [churroVisible, setChurroVisible] = useState(false);
 
   useEffect(() => {
     firstMount.current = false;
@@ -63,7 +69,7 @@ export default function DesktopIcons() {
     return () => clearTimeout(timerId);
   }, []);
 
-  const openApp = (app: 'terminal' | 'photos') => {
+  const openApp = (app: 'terminal' | 'photos' | 'churro') => {
     setActiveApps((prev) => {
       const prevZIndex = prev[app].zIndex;
       let zIndex;
@@ -105,7 +111,7 @@ export default function DesktopIcons() {
     }));
   };
 
-  const closeApp = (app: 'terminal' | 'photos') => {
+  const closeApp = (app: 'terminal' | 'photos' | 'churro') => {
     setActiveApps((prev) => ({
       ...prev,
       [app]: { status: CLOSED, zIndex: prev[app].zIndex },
@@ -131,7 +137,9 @@ export default function DesktopIcons() {
           onClick={() => openApp('terminal')}
         />
       </div>
-      <AppsContext value={{ openApp, closeApp }}>
+      <AppsContext
+        value={{ openApp, closeApp, churroVisible, setChurroVisible }}
+      >
         <div
           style={{
             position: 'absolute',
@@ -145,7 +153,7 @@ export default function DesktopIcons() {
           <div id="bottom-bar" className={styles.bottomBar} />
 
           <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
-            <Churro />
+            {churroVisible && <Churro />}
 
             {activeApps.terminal.status ? (
               <Window
@@ -171,6 +179,18 @@ export default function DesktopIcons() {
                 focusWindow={() => openApp('photos')}
                 zIndex={activeApps.photos.zIndex}
               ></Window>
+            ) : null}
+            {activeApps.churro.status ? (
+              <Window
+                width={250}
+                height={200}
+                initialPos="middle-left"
+                close={() => closeApp('churro')}
+                focusWindow={() => openApp('churro')}
+                zIndex={activeApps.churro.zIndex}
+              >
+                {<ChurroApp />}
+              </Window>
             ) : null}
           </div>
         </div>

@@ -29,7 +29,7 @@ export default function Window({
   zIndex: number;
   width?: number;
   height?: number;
-  initialPos?: 'top-right' | 'middle-right' | 'bottom-right' | 'center';
+  initialPos?: 'middle-right' | 'middle-left' | 'center';
   children?: ReactNode;
 }) {
   const nodeRef = useRef<HTMLDivElement>(null);
@@ -72,15 +72,10 @@ export default function Window({
     let x = (parent.clientWidth - child.offsetWidth) / 2;
     let y = (parent.clientHeight - child.offsetHeight) / 2;
 
-    if (initialPos === 'top-right') {
+    if (initialPos === 'middle-right') {
       x = parent.clientWidth - child.offsetWidth;
-      y = child.offsetHeight / 2;
-    } else if (initialPos === 'middle-right') {
-      x = parent.clientWidth - child.offsetWidth;
-      y = (parent.clientHeight - child.offsetHeight) / 2;
-    } else if (initialPos === 'bottom-right') {
-      x = parent.clientWidth - child.offsetWidth / 2;
-      y = parent.clientWidth - child.offsetHeight / 2;
+    } else if (initialPos === 'middle-left') {
+      x = 0;
     }
 
     setPosition({ x, y });
