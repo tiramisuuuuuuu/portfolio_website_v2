@@ -12,6 +12,7 @@ import SkillsSection from './SkillsSection';
 import { AnimatePresence, stagger } from 'motion/react';
 import { motion } from 'motion/react';
 import { AppsContext } from './appsContext';
+import AboutMeSection from './AboutMeSection';
 
 function Command({
   command,
@@ -103,6 +104,17 @@ export default function TerminalApp() {
             body="Welcome to my desktop-theme portfolio site ☕︎! My name is Sreya and I am an incoming M.S. AI student, currently looking for a Software Engineering internship."
             isSmall={isSmall}
           />,
+          <Command command='open -a "Photos"' isSmall={isSmall} />,
+          <div className={styles.oneLine}>
+            <p>Opening app...</p>
+            <p style={{ color: 'lightgreen' }}>ok</p>
+          </div>,
+          <Command
+            command="aboutMe"
+            isSmall={isSmall}
+          >
+            <AboutMeSection isSmall={isSmall} />
+          </Command>,
         ],
       },
       skills: {
@@ -214,7 +226,7 @@ export default function TerminalApp() {
                 key={`${activeCommand}-${idx}`}
                 flex={activeCommand === 'skills' && idx === 2}
                 onAnimationComplete={() => {
-                  if (activeCommand === 'about' && idx === 1) {
+                  if (activeCommand === 'about' && idx === 3) {
                     openApp('photos');
                   }
                   if (activeCommand === 'churro' && idx === 1) {
