@@ -84,7 +84,7 @@ function MotionWrapper({
 
 export default function TerminalApp() {
   const [activeCommand, setActiveCommand] = useState<
-    'about' | 'skills' | 'projects' | 'contact' | 'help' | null
+    'about' | 'skills' | 'projects' | 'contact' | 'help' | 'churro' | null
   >('about');
   const inputText = useRef('');
   const [submittedText, setSubmittedText] = useState('');
@@ -123,6 +123,19 @@ export default function TerminalApp() {
       },
       help: {
         sections: [<Command command="help" isSmall={isSmall} />],
+      },
+      churro: {
+        sections: [
+          <Command command='open -a "Churro App"' isSmall={isSmall} />,
+          <div className={styles.oneLine}>
+            <p>Opening app...</p>
+            <p style={{ color: 'lightgreen' }}>ok</p>
+          </div>,
+          <p className={styles.body}>
+            {'['}help text{']'}: This app allows you to add a cute cat, named
+            Churro, to your desktop.
+          </p>,
+        ],
       },
     }),
     [isSmall]
@@ -164,7 +177,8 @@ export default function TerminalApp() {
         input === 'skills' ||
         input === 'projects' ||
         input === 'contact' ||
-        input === 'help'
+        input === 'help' ||
+        input === 'churro'
       ) {
         setActiveCommand(input);
       } else {
@@ -199,11 +213,14 @@ export default function TerminalApp() {
               <MotionWrapper
                 key={`${activeCommand}-${idx}`}
                 flex={activeCommand === 'skills' && idx === 2}
-                onAnimationComplete={
-                  activeCommand === 'about' && idx === 1
-                    ? () => openApp('photos')
-                    : undefined
-                }
+                onAnimationComplete={() => {
+                  if (activeCommand === 'about' && idx === 1) {
+                    openApp('photos');
+                  }
+                  if (activeCommand === 'churro' && idx === 1) {
+                    openApp('churro');
+                  }
+                }}
               >
                 {sectionDiv}
               </MotionWrapper>

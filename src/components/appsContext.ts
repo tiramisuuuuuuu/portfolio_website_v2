@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 
 export const AppsContext = createContext({
-  openApp: (app: 'terminal' | 'photos') => {},
+  openApp: (app: 'terminal' | 'photos' | 'churro') => {},
   closeApp: (app: 'terminal' | 'photos') => {},
   churroVisible: false,
   setChurroVisible: (isVisible: boolean) => {},

@@ -6,6 +6,8 @@ import TerminalApp from './TerminalApp';
 import { AppsContext } from './appsContext';
 import Churro from './Churro';
 import ChurroApp from './ChurroApp';
+import { FaCat } from 'react-icons/fa';
+import { MdPhoto } from 'react-icons/md';
 
 const CLOSED = 0;
 const OPEN = 1;
@@ -39,7 +41,7 @@ export default function DesktopIcons() {
       zIndex: 0,
     },
     churro: {
-      status: OPEN,
+      status: CLOSED,
       zIndex: 0,
     },
   });
@@ -178,6 +180,8 @@ export default function DesktopIcons() {
                 minimized={activeApps.terminal.status === MINIMIZED}
                 focusWindow={() => openApp('photos')}
                 zIndex={activeApps.photos.zIndex}
+                icon={<MdPhoto color="#a89bc9" size={25} />}
+                name="Photos"
               ></Window>
             ) : null}
             {activeApps.churro.status ? (
@@ -188,6 +192,8 @@ export default function DesktopIcons() {
                 close={() => closeApp('churro')}
                 focusWindow={() => openApp('churro')}
                 zIndex={activeApps.churro.zIndex}
+                icon={<FaCat color="#a89bc9" size={25} />}
+                name="Churro App"
               >
                 {<ChurroApp />}
               </Window>

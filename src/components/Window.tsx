@@ -19,6 +19,8 @@ export default function Window({
   width,
   height,
   initialPos = 'center',
+  icon,
+  name,
   children,
 }: {
   minimized?: boolean;
@@ -30,6 +32,8 @@ export default function Window({
   width?: number;
   height?: number;
   initialPos?: 'middle-right' | 'middle-left' | 'center';
+  icon?: ReactNode;
+  name?: string;
   children?: ReactNode;
 }) {
   const nodeRef = useRef<HTMLDivElement>(null);
@@ -132,8 +136,8 @@ export default function Window({
                   gap: 10,
                 }}
               >
-                <FaTerminal color="#a89bc9" size={25} />
-                <p className={styles.heading}>Portfolio</p>
+                {icon ? icon : <FaTerminal color="#a89bc9" size={25} />}
+                <p className={styles.heading}>{name ? name : 'Portfolio'}</p>
               </div>
 
               <div className={styles.bttns}>
