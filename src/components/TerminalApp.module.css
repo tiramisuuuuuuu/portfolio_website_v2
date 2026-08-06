@@ -54,6 +54,7 @@
   width: 100%;
   text-align: start;
   font-family: 'Space Mono', monospace;
+  color: lightgray;
 }
 
 .oneLine {

@@ -17,7 +17,7 @@ export default function ChurroApp() {
     asleep: '/ᐠ - ˕ -マ ᶻ 𝗓 𐰁',
   };
   const [animationPhase, setAnimationPhase] = useState(
-    !churroVisible ? 'frame1' : 'frame5'
+    !churroVisible ? 'rest' : 'frame5'
   );
   const timerId = useRef<number>(null);
 
