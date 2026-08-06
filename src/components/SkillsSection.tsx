@@ -332,6 +332,7 @@ export default function SkillsSection() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        touchAction: "none",
       }}
       className={styles.container}
     >
