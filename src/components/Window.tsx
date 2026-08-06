@@ -102,7 +102,10 @@ export default function Window({
         position={position}
         onDrag={handleDrag}
         cancel="button"
-        onStart={() => setIsDragging(true)}
+        onStart={() => {
+          setIsDragging(true);
+          focusWindow();
+        }}
         onStop={() => setIsDragging(false)}
         handle=".drag-handle"
         bounds="parent"
