@@ -25,7 +25,7 @@ export default function ChurroApp() {
     if (animationPhase === 'chill') {
       const id = setTimeout(() => {
         setAnimationPhase('asleep');
-      }, 25000);
+      }, 5000);
       timerId.current = id;
     }
   }, [animationPhase]);

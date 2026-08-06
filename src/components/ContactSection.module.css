@@ -9,7 +9,6 @@
   box-sizing: border-box;
   align-items: center;
   font-family: 'Space Mono', monospace;
-  overflow: hidden;
 }
 
 .letter {
@@ -19,6 +18,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .header {
@@ -31,7 +31,7 @@
 .leftLine,
 .rightLine {
   position: absolute;
-  top: 100%;
+  top: 90%;
   width: 50%;
   border-top: 3px dashed white;
 }
