@@ -1,6 +1,6 @@
 .container {
   flex: 1;
-  border: 3px, dashed, white;
+  border: 3px dashed white;
   min-height: 200px;
   max-height: 500px;
 

@@ -10,7 +10,7 @@
 
 .projectDiv {
   width: '100%';
-  border: 2px, dashed, white;
+  border: 2px dashed white;
   padding: 20px;
 }
 
@@ -31,7 +31,7 @@
 
 .skill {
   border-radius: 5px;
-  border: 1px, solid, #f0f3bd;
+  border: 1px solid #f0f3bd;
   background-color: rgba(250, 235, 215, 0.267);
 
   padding-left: 5px;
