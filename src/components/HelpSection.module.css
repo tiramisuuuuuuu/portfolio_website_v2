@@ -1,0 +1,28 @@
+.container {
+  width: 100%;
+  margin-top: 10px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Space Mono', monospace;
+  text-align: start;
+}
+
+.pair {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  color: lightgray;
+}
+
+.key {
+  width: 30%;
+  min-width: 100px;
+}
+
+.value {
+  flex: 1;
+}

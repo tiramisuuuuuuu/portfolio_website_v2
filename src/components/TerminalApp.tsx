@@ -14,6 +14,7 @@ import { motion } from 'motion/react';
 import { AppsContext } from './appsContext';
 import AboutMeSection from './AboutMeSection';
 import ProjectsSection from './ProjectsSection';
+import HelpSection from './HelpSection';
 
 function Command({
   command,
@@ -135,7 +136,10 @@ export default function TerminalApp() {
         sections: [<Command command="cat contact.txt" isSmall={isSmall} />],
       },
       help: {
-        sections: [<Command command="help" isSmall={isSmall} />],
+        sections: [
+          <Command command="help" isSmall={isSmall} />,
+          <HelpSection isSmall={isSmall} />,
+        ],
       },
       churro: {
         sections: [
