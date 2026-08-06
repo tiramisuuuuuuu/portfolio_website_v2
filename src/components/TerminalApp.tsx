@@ -15,6 +15,7 @@ import { AppsContext } from './appsContext';
 import AboutMeSection from './AboutMeSection';
 import ProjectsSection from './ProjectsSection';
 import HelpSection from './HelpSection';
+import ContactSection from './ContactSection';
 
 function Command({
   command,
@@ -133,7 +134,10 @@ export default function TerminalApp() {
         ],
       },
       contact: {
-        sections: [<Command command="cat contact.txt" isSmall={isSmall} />],
+        sections: [
+          <Command command="cat contact.txt" isSmall={isSmall} />,
+          <ContactSection />,
+        ],
       },
       help: {
         sections: [
@@ -229,7 +233,10 @@ export default function TerminalApp() {
             COMMANDS[activeCommand].sections.map((sectionDiv, idx) => (
               <MotionWrapper
                 key={`${activeCommand}-${idx}`}
-                flex={activeCommand === 'skills' && idx === 2}
+                flex={
+                  (activeCommand === 'skills' && idx === 2) ||
+                  (activeCommand === 'contact' && idx === 1)
+                }
                 onAnimationComplete={() => {
                   if (activeCommand === 'about' && idx === 2) {
                     openApp('photos');

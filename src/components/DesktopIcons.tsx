@@ -8,6 +8,7 @@ import Churro from './Churro';
 import ChurroApp from './ChurroApp';
 import { FaCat } from 'react-icons/fa';
 import { MdPhoto } from 'react-icons/md';
+import HeadshotJpeg from '../assets/me.jpg';
 
 const CLOSED = 0;
 const OPEN = 1;
@@ -175,14 +176,23 @@ export default function DesktopIcons() {
             {activeApps.photos.status && activeApps.terminal.status ? (
               <Window
                 width={250}
-                height={300}
+                height={250}
                 initialPos="middle-right"
                 minimized={activeApps.terminal.status === MINIMIZED}
                 focusWindow={() => openApp('photos')}
                 zIndex={activeApps.photos.zIndex}
                 icon={<MdPhoto color="#a89bc9" size={25} />}
                 name="Photos"
-              ></Window>
+              >
+                <img
+                  src={HeadshotJpeg}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
+                />
+              </Window>
             ) : null}
             {activeApps.churro.status ? (
               <Window

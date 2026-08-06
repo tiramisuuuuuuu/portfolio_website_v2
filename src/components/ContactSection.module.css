@@ -1,0 +1,65 @@
+.container {
+  flex: 1;
+  border: 3px, dashed, white;
+  min-height: 200px;
+  max-height: 500px;
+
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  align-items: center;
+  font-family: 'Space Mono', monospace;
+}
+
+.letter {
+  width: 100%;
+  height: 50%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  position: absolute;
+  color: white;
+  top: 30%;
+  font-size: small;
+}
+
+.leftLine,
+.rightLine {
+  position: absolute;
+  top: 100%;
+  width: 50%;
+  border-top: 3px dashed white;
+}
+
+.leftLine {
+  left: 0;
+  transform-origin: right center;
+  transform: rotate(15deg);
+}
+
+.rightLine {
+  right: 0;
+  transform-origin: left center;
+  transform: rotate(-15deg);
+}
+
+.content {
+  margin-top: 10px;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.link {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+}
