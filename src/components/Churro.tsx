@@ -12,6 +12,7 @@ export default function Churro() {
         alignSelf: 'flex-end',
         marginBottom: -13,
         marginLeft: 40,
+        userSelect: 'none',
       }}
     >
       <img

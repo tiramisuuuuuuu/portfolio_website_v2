@@ -190,6 +190,7 @@ export default function DesktopIcons() {
                     width: '100%',
                     height: '100%',
                     objectFit: 'contain',
+                    userSelect: 'none',
                   }}
                 />
               </Window>

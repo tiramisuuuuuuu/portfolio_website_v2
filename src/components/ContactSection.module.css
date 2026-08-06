@@ -9,6 +9,7 @@
   box-sizing: border-box;
   align-items: center;
   font-family: 'Space Mono', monospace;
+  overflow: hidden;
 }
 
 .letter {

@@ -55,7 +55,7 @@ export default function ChurroApp() {
         animate={{
           opacity: 1,
           transition: {
-            duration: 1,
+            duration: 0.7,
           },
         }}
         onAnimationComplete={() => {
